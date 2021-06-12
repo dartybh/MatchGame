@@ -46,19 +46,24 @@ namespace MatchGame
 
         private void SetUpGame()
         {
-            List<string> animalEmoji = new List<string>()
+            List<string> allAnimalEmojis = new List<string>()
             {
-                "🐒", "🐒",
-                "🦍", "🦍",
-                "🐩", "🐩",
-                "🦏", "🦏",
-                "🐄", "🐄",
-                "🐖", "🐖",
-                "🐪", "🐪",
-                "🦘", "🦘"
+                "🐒", "🦍", "🐩", "🦏", "🐄", "🐖", "🐪", "🦘", "🐎", "🦙", "🦨", "🐘", "🐁", "🐇", "🐢", "🐍", "🦀", "🐓", "🦆", "🦅"
             };
 
+            List<string> animalEmoji = new List<string>();
+
             Random random = new Random();
+
+            // Adds two of a random emoji from the all animals list to the animal list to ensure even pairs when emojis are assigned to text blocks.
+            foreach (int value in Enumerable.Range(0, 8))
+            {
+                int index = random.Next(allAnimalEmojis.Count);
+                string nextEmoji = allAnimalEmojis[index];
+                animalEmoji.Add(nextEmoji);
+                animalEmoji.Add(nextEmoji);
+                allAnimalEmojis.RemoveAt(index);
+            }
 
             foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>())
             {
