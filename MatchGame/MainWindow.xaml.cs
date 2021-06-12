@@ -24,6 +24,7 @@ namespace MatchGame
         DispatcherTimer timer = new DispatcherTimer();
         int tenthOfSecondsElapsed;
         int matchesFound;
+        bool gameOver = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -36,16 +37,20 @@ namespace MatchGame
         private void Timer_Tick(object sender, EventArgs e)
         {
             tenthOfSecondsElapsed++;
-            timeTextBlock.Text = (tenthOfSecondsElapsed / 10f).ToString("0.0s");
-            if (matchesFound == 8)
+            timeTextBlock.Text = (30 - tenthOfSecondsElapsed / 10f).ToString("0.0s");
+            if (matchesFound == 8 || tenthOfSecondsElapsed >= 300)
             {
                 timer.Stop();
+                gameOver = true;
                 timeTextBlock.Text = timeTextBlock.Text + " - Click to play again";
             }
         }
 
         private void SetUpGame()
         {
+            tenthOfSecondsElapsed = 0;
+            gameOver = false;
+
             List<string> allAnimalEmojis = new List<string>()
             {
                 "🐒", "🦍", "🐩", "🦏", "🐄", "🐖", "🐪", "🦘", "🐎", "🦙", "🦨", "🐘", "🐁", "🐇", "🐢", "🐍", "🦀", "🐓", "🦆", "🦅"
@@ -84,34 +89,38 @@ namespace MatchGame
 
         TextBlock lasTextBlockClicked;
         bool findingMatch = false;
+        
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TextBlock textBlock = sender as TextBlock;
-            
-            if (!findingMatch)
+            if (!gameOver)
             {
-                textBlock.Visibility = Visibility.Hidden;
-                lasTextBlockClicked = textBlock;
-                findingMatch = true;
+                if (!findingMatch)
+                {
+                    textBlock.Visibility = Visibility.Hidden;
+                    lasTextBlockClicked = textBlock;
+                    findingMatch = true;
+                }
+                else if (textBlock.Text == lasTextBlockClicked.Text)
+                {
+                    matchesFound++;
+                    textBlock.Visibility = Visibility.Hidden;
+                    findingMatch = false;
+                }
+                else
+                {
+                    lasTextBlockClicked.Visibility = Visibility.Visible;
+                    findingMatch = false;
+                }
             }
-            else if (textBlock.Text == lasTextBlockClicked.Text)
-            {
-                matchesFound++;
-                textBlock.Visibility = Visibility.Hidden;
-                findingMatch = false;
-            }
-            else
-            {
-                lasTextBlockClicked.Visibility = Visibility.Visible;
-                findingMatch = false;
-            }
+
 
         }
 
         private void timeTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (matchesFound == 8)
+            if (matchesFound == 8 || tenthOfSecondsElapsed >= 300)
             {
                 SetUpGame();
             }
