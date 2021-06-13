@@ -25,8 +25,6 @@ namespace MatchGame
         int tenthOfSecondsElapsed;
         int matchesFound;
         bool gameOver = false;
-        List<float> scores = new List<float>();
-
         public MainWindow()
         {
             InitializeComponent();
@@ -44,15 +42,7 @@ namespace MatchGame
             {
                 timer.Stop();
                 gameOver = true;
-                if (tenthOfSecondsElapsed >= 300)
-                {
-                    timeTextBlock.Text = "Time ran out! Click to play again";
-                }
-                else
-                {
-                    timeTextBlock.Text = "Score: " + scores.Sum() + " - Click to play again";
-                }
-                
+                timeTextBlock.Text = timeTextBlock.Text + " - Click to play again";
             }
         }
 
@@ -115,7 +105,6 @@ namespace MatchGame
                 else if (textBlock.Text == lasTextBlockClicked.Text)
                 {
                     matchesFound++;
-                    scores.Add(30 - tenthOfSecondsElapsed / 10f);
                     textBlock.Visibility = Visibility.Hidden;
                     findingMatch = false;
                 }
